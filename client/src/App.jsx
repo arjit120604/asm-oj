@@ -5,6 +5,7 @@ import MonacoEditor from '@monaco-editor/react'
 function App() {
   const [content, setContent] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
+  const [compilationMessage, setCompilationMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,6 +25,25 @@ function App() {
       setResponseMessage('Error: '+error.message);
     }
   };
+  
+  const handleCompile = async () => {
+    try {
+      console.log("Content being compiled:", content); // For debugging
+      const response = await fetch('/compile-asm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content }), // Send the content to be compiled
+      });
+
+      const result = await response.text();
+      setCompilationMessage(result); // Display compilation result
+    } catch (error) {
+      setCompilationMessage('Error: ' + error.message);
+    }
+  };
+
 
 
   return(
@@ -48,6 +68,9 @@ function App() {
         <button type="submit">Save as test.asm</button>
       </form>
       <p>{responseMessage}</p>
+      
+      <button onClick={handleCompile}>Compile Code</button>
+      <p>{compilationMessage}</p> {/* Compilation result */}
     </div>
   );
 }

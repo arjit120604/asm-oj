@@ -1,2 +1,4 @@
 node_modules
 *.asm
+*.o
+*.exe
