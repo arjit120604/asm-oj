@@ -1,5 +1,6 @@
 import React, {useState} from "react";
-import './App.css';
+import MonacoEditor from '@monaco-editor/react'
+;import './App.css';
 
 function App() {
   const [content, setContent] = useState('');
@@ -30,15 +31,18 @@ function App() {
       <h1> Submit Asm File content</h1>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="content">File content:</label>
-          <textarea
-            id="content"
+          <MonacoEditor
+            height="400px"
+            width="600px"
+            language="asm"
+            theme="vs-dark"
             value={content}
-            onChange={(e)=>setContent(e.target.value)}
-            rows="10"
-            cols="50"
-            required
-            ></textarea>
+            onChange={(value) => setContent(value)}
+            options={{
+              automaticLayout: true,
+              minimap: { enabled: false },
+            }}
+          />
         </div>
         <br />
         <button type="submit">Save as test.asm</button>
