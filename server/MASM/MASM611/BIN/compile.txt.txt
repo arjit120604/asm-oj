@@ -1,0 +1,9 @@
+masm %1.asm;
+if errorlevel 1 goto end
+echo %1.obj > link.txt
+echo %1.exe >> link.txt
+echo nul >> link.txt
+echo nul >> link.txt
+link < link.txt
+del link.txt
+:end
