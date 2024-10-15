@@ -28,7 +28,7 @@ app.post('/save-asm', (req, res) => {
             return res.status(500).send('Failed to save file');
         }
 
-        res.send('File saved as test.asm')
+        res.status(200).send('File saved as test.asm')
     });
 
 });
