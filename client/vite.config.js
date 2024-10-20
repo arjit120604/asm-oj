@@ -8,6 +8,8 @@ export default defineConfig({
     proxy:{
       '/save-asm': 'http://localhost:3000',
       '/compile-asm':'http://localhost:3000',
+      '/login':'http://localhost:3000',
+      '/logout':'http://localhost:3000'
     },
   },
 })

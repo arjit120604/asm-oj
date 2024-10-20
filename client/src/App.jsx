@@ -2,12 +2,37 @@ import React, {useState} from "react";
 import MonacoEditor from '@monaco-editor/react'
 import './App.css';
 import { toast } from "sonner";
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
+import Login from "./pages/Login/Login";
+import { useNavigate } from "react-router-dom";
 
-function App() {
+function Home() {
+  const navigate = useNavigate();
   const [content, setContent] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
   const [compilationMessage, setCompilationMessage] = useState('');
 
+  
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        toast.success('Logged out successfully');
+        navigate('/');
+      } else {
+        const message = await response.text();
+        throw new Error(message);
+      }
+    } catch (error) {
+      toast.error('Error: ' + error.message);
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -21,11 +46,17 @@ function App() {
       });
 
       const message = await response.text();
-      if (response.status !== 200) {
-        throw new Error(message);
+      if (response.status === 401) {
+        toast.error('User not logged in')
+        navigate('/');
+        return;
+      }
+      if (response.status !== 200){
+        throw new Error(message)
       }
       toast.success(message);
     } catch (error) {
+
       toast.error('Error: '+error.message);
     }
   };
@@ -75,6 +106,7 @@ function App() {
 
   return(
     <div className="App">
+      <button onClick={handleLogout} style={{marginTop:"4rem"}}>Logout</button> 
       <h1> Submit Asm File content</h1>
       <form onSubmit={handleSubmit}>
         <div>
@@ -100,7 +132,19 @@ function App() {
       <p>{compilationMessage}</p> {/* Compilation result */}
       <label htmlFor="file-upload" className="file-input-label">Upload .asm file</label>
       <input id="file-upload" type="file" accept=".asm" onChange={handleUpload} className="file-input" />
+      
     </div>
+  );
+}
+function App(){
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Login/>} />
+
+      </Routes>
+    </BrowserRouter>
   );
 }
 
