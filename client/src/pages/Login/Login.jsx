@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import './Login.css';
@@ -21,6 +21,7 @@ function Login() {
 
       if (response.ok) {
         navigate('/home');
+        sessionStorage.setItem('auth', JSON.stringify({ username, password }));
       } else {
         toast.error('Invalid username or password');
       }
@@ -28,6 +29,8 @@ function Login() {
       console.error('Error during login:', error);
     }
   };
+  
+
 
   return (
     <div className="login-container">
