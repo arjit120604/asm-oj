@@ -6,7 +6,7 @@ const path=require('path');
 const { exec } = require('child_process');
 const {connectAndCreateTable, getHashedPassword, insertUsernamePassword} = require('./db/db.js');
 const {hashPassword, verifyPassword } = require ('./hash.js')
-
+require('dotenv').config();
 const app=express();
 const PORT=3000;
 
@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
 app.use(session({
-  secret: 'secret-key', 
+  secret: process.env.SESSION_SECRET, 
   resave: false,
   saveUninitialized: true,
 }));

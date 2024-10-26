@@ -1,11 +1,12 @@
 const { Client } = require('pg');
-const {hashPassword} = require('../hash.js')
+const {hashPassword} = require('../hash.js');
+require('dotenv').config();
 const client = new Client({
-    user: 'arjit',
-    host: 'localhost',
-    database: 'asm-oj',
-    password: 'pass123',
-    port: 5432,
+    user: process.env.POSTGRES_USER,
+    host: process.env.POSTGRES_HOST,
+    database: process.env.POSTGRES_DATABASE,
+    password: process.env.POSTGRES_PASSWORD,
+    port: process.env.POSTGRES_PORT || 5432,
 });
 
 async function connectAndCreateTable() {
@@ -15,21 +16,23 @@ async function connectAndCreateTable() {
         
         // await client.query('DROP TABLE IF EXISTS users;')
         // console.log('Table dropped if it existed');
+        
 
-        await client.query(`
-            CREATE TABLE IF NOT EXISTS users (
-            username text PRIMARY KEY,
-            password text NOT NULL
-            );
-        `);
-        console.log('Table created');
+        //uncomment this to add user with usename 'a' and password 'pass123'
+        // await client.query(`
+        //     CREATE TABLE IF NOT EXISTS users (
+        //     username text PRIMARY KEY,
+        //     password text NOT NULL
+        //     );
+        // `);
+        // console.log('Table created');
 
-        let hash = await hashPassword('pass123');
-        await client.query(`
-            INSERT INTO users (username, password) VALUES ('a', '${hash}')
-            ON CONFLICT (username) DO NOTHING;
-        `);
-        console.log('User a added or already exists');
+        // let hash = await hashPassword('pass123');
+        // await client.query(`
+        //     INSERT INTO users (username, password) VALUES ('a', '${hash}')
+        //     ON CONFLICT (username) DO NOTHING;
+        // `);
+        // console.log('User a added or already exists');
     } catch (err) {
         console.error('Error connecting to the database or creating table', err);
     }
